@@ -1,0 +1,573 @@
+{
+    "sections": [
+        {
+            "title": "Essential Commands",
+            "commands": [
+                {
+                    "syntax": "ssh -V",
+                    "description": "Display the version of the OpenSSH client"
+                },
+                {
+                    "syntax": "hostnamectl",
+                    "description": "change the static hostname of your Linux system"
+                },
+                {
+                    "syntax": "ssh -v alex@localhost",
+                    "description": "That will show a lot more status messages and help you debug why this connection is failing."
+                },
+                {
+                    "syntax": "ls -la /home/bob/data/",
+                    "description": "Find hidden files in a given directory"
+                },
+                {
+                    "syntax": "touch /home/bob/myfile",
+                    "description": "Create a file name myfile in the /home/bob/ directory"
+                },
+                {
+                    "syntax": "apropos \"NFS mounts\"",
+                    "description": "Search the manual page names and descriptions for keywords."
+                },
+                {
+                    "syntax": "usermod -a -G developers jane",
+                    "description": "Add the user jane to the group called developers"
+                },
+                {
+                    "syntax": "groupadd -g 9875 cricket",
+                    "description": "Create a group named cricket and set its GID to 9875"
+                },
+                {
+                    "syntax": "groupmod -n soccer cricket",
+                    "description": "Rename cricket group to soccer while preserving the same GID"
+                },
+                {
+                    "syntax": "useradd -G soccer sam --uid 5322",
+                    "description": "Create a user sam with UID 5322, also make it a member of soccer group."
+                },
+                {
+                    "syntax": "usermod -g rugby sam",
+                    "description": "Update primary group of user sam and set it to rugby"
+                },
+                {
+                    "syntax": "usermod -L sam",
+                    "description": "Lock the user account called sam"
+                },
+                {
+                    "syntax": "groupdel appdevs",
+                    "description": "Delete the group called appdevs"
+                },
+                {
+                    "syntax": "chage -W 2 jane",
+                    "description": "Make sure the user jane gets a warning at least 2 days before the password expires"
+                },
+                {
+                    "syntax": "gpasswd -a trinity wheel",
+                    "description": "Allow the user called trinity to execute any sudo command"
+                },
+                {
+                    "syntax": "findmnt /dev/vda1",
+                    "description": "Show mount options used with /dev/vda1"
+                },
+                {
+                    "syntax": "umount /mnt",
+                    "description": "Manually unmount filesystems"
+                },
+                {
+                    "syntax": "mount -o ro,noexec,nosuid /dev/vdb1 /mnt",
+                    "description": "Mount /dev/vdb1 into the /mnt/ directory, use mount options: ro,noexec,nosuid"
+                },
+                {
+                    "syntax": "openssl req -newkey rsa:4096 -keyout priv.key -out cert.csr",
+                    "description": "Generate a key and certificate signing request"
+                },
+                {
+                    "syntax": "openssl x509 -in my.crt -text",
+                    "description": "Identify the CN of certificate"
+                },
+                {
+                    "syntax": "git add *.cpp",
+                    "description": "Stage all the files with the .cpp extension to prepare them for a future commit"
+                },
+                {
+                    "syntax": "git commit -m \"Message\"",
+                    "description": "Commit the files with the commit message"
+                },
+                {
+                    "syntax": "git branch testing",
+                    "description": "Create a branch with the name testing"
+                },
+                {
+                    "syntax": "git checkout master",
+                    "description": "Check out to master branch"
+                },
+                {
+                    "syntax": "git branch --delete testing",
+                    "description": "Delete the testing branch"
+                },
+                {
+                    "syntax": "git log --raw",
+                    "description": "Check for the file modified in the latest commit"
+                },
+                {
+                    "syntax": "git merge \"branch name\"",
+                    "description": "Merge the branch to the master branch"
+                },
+                {
+                    "syntax": "git pull origin master",
+                    "description": "Pull in the latest commits from the remote repository"
+                },
+                {
+                    "syntax": "git push origin master",
+                    "description": "Push changes to master branch of remote repository"
+                },
+                {
+                    "syntax": "git clone \"repository\"",
+                    "description": "Clone the repo"
+                }
+            ]
+        },
+        {
+            "title": "Operations Deployment",
+            "commands": [
+                {
+                    "syntax": "shutdown +120",
+                    "description": "Schedule this system to power off two hours later from now"
+                },
+                {
+                    "syntax": "grub-install /dev/vda",
+                    "description": "Installs the GRUB bootloader to the /dev/vda device"
+                },
+                {
+                    "syntax": "systemctl get-default",
+                    "description": "Find out what is the system's current default boot target"
+                },
+                {
+                    "syntax": "shutdown -c",
+                    "description": "Cancel the scheduled shutdown you configured in the beginning"
+                },
+                {
+                    "syntax": "./script.sh",
+                    "description": "How do we run script.sh that is located in our current directory?"
+                },
+                {
+                    "syntax": "chmod u+x ./script.sh",
+                    "description": "Make script executable"
+                },
+                {
+                    "syntax": "systemctl daemon-reload",
+                    "description": "Reload systemd manager configuration"
+                },
+                {
+                    "syntax": "ps lax",
+                    "description": "See all processes running on the system, along with their nice values"
+                },
+                {
+                    "syntax": "sleep 10",
+                    "description": "Sleep for 10 seconds"
+                },
+                {
+                    "syntax": "renice 9 <PID>",
+                    "description": "Assign a nice value of 9 to process"
+                },
+                {
+                    "syntax": "lsof -p 1",
+                    "description": "List all files that are opened by process with PID 1"
+                },
+                {
+                    "syntax": "pgrep -a rpcbind",
+                    "description": "Identify the PID of the process named rpcbind"
+                },
+                {
+                    "syntax": "kill -SIGHUP <pid>",
+                    "description": "Send the SIGHUP signal to PID"
+                },
+                {
+                    "syntax": "grep -r --text 'reboot' /var/log/",
+                    "description": "Under `/var/log` directory, search for all files containing the `reboot` string"
+                },
+                {
+                    "syntax": "ps u 1",
+                    "description": "Identify the CPU and Memory usage by only the process having PID 1"
+                },
+                {
+                    "syntax": "[command] &",
+                    "description": "Running command in the background"
+                },
+                {
+                    "syntax": "jobs",
+                    "description": "list running background jobs"
+                },
+                {
+                    "syntax": "fg %1",
+                    "description": "bring a job back to foreground"
+                },
+                {
+                    "syntax": "crontab -l",
+                    "description": "See the crontab for theroot user"
+                },
+                {
+                    "syntax": "sudo -u john crontab -e",
+                    "description": "List crontab for john"
+                },
+                {
+                    "syntax": "sudo crontab -e",
+                    "description": "Modify crontab for root user"
+                },
+                {
+                    "syntax": "anacron -n -f",
+                    "description": "Force anacron to rerun all jobs, regardless of when they were last executed"
+                },
+                {
+                    "syntax": "atq",
+                    "description": "List currently scheduled jobs under current user"
+                },
+                {
+                    "syntax": "atrm <jobid>",
+                    "description": "Remove the job with JOBID"
+                },
+                {
+                    "syntax": "apt search \"apache http server\"",
+                    "description": "Search for package"
+                },
+                {
+                    "syntax": "apt install apache2",
+                    "description": "Install the Apache web server"
+                },
+                {
+                    "syntax": "dpkg --search /bin/ls",
+                    "description": "Find out the name of the package that \"/bin/ls\" belongs to."
+                },
+                {
+                    "syntax": "dpkg --listfiles coreutils | grep ^/bin",
+                    "description": "list the files that belong to coreutils package"
+                },
+                {
+                    "syntax": "apt-get remove --auto-remove -y ziptool",
+                    "description": "Uninstall the package ziptool and its dependency package(s) from the system."
+                },
+                {
+                    "syntax": "df /",
+                    "description": "Identify what % space of / partition is in use on our system"
+                },
+                {
+                    "syntax": "du -sh /bin/",
+                    "description": "Show storage space of the /bin/ directory"
+                },
+                {
+                    "syntax": "free --mega",
+                    "description": "Show the memory on this system (in megabytes)"
+                },
+                {
+                    "syntax": "uptime",
+                    "description": "Show how long this system is up"
+                },
+                {
+                    "syntax": "lscpu",
+                    "description": "Show CPU architecture information from sysfs"
+                },
+                {
+                    "syntax": "xfs_repair /dev/vdb",
+                    "description": "Check /dev/vdb XFS filesystem for errors"
+                },
+                {
+                    "syntax": "sysctl -w kernel.modules_disabled=1",
+                    "description": "Turn on kernel.modules_disabled kernel runtime parameter"
+                },
+                {
+                    "syntax": "ls -Z /bin/sudo",
+                    "description": "Check out the SELinux label for the file stored at /bin/sudo"
+                },
+                {
+                    "syntax": "chcon -t httpd_sys_content_t /var/index.html",
+                    "description": "Change the SELinux context of /var/index.html file to httpd_sys_content_t"
+                },
+                {
+                    "syntax": "setenforce 0",
+                    "description": "Temporarily change the SELinux status to Permissive on this system. setenforce 1 to enable"
+                },
+                {
+                    "syntax": "getenforce",
+                    "description": "Shows current mode (Enforcing/Permissive/Disabled)"
+                },
+                {
+                    "syntax": "sestatus",
+                    "description": "Shows detailed SELinux status"
+                },
+                {
+                    "syntax": "semanage user -l",
+                    "description": "Identify the SELinux Roles for staff_u SELinux user"
+                },
+                {
+                    "syntax": "restorecon -R /var/log/",
+                    "description": "Restore the correct (default) labels for every file and subdirectory in the /var/log directory"
+                }
+            ]
+        },
+        {
+            "title": "Users and Groups",
+            "commands": [
+                {
+                    "syntax": "usermod -e 2030-03-01 jane",
+                    "description": "Set the jane user account to expire on March 1, 2030"
+                },
+                {
+                    "syntax": "usermod -e \"\" jane",
+                    "description": "Unexpire Jane's account and make sure it never expires again"
+                },
+                {
+                    "syntax": "useradd -s /bin/csh -m jack",
+                    "description": "Create a user account called jack with home directory and set its default login shell to be /bin/csh"
+                },
+                {
+                    "syntax": "userdel -r jack",
+                    "description": "Delete the user account called jack and ensure his home directory is removed"
+                },
+                {
+                    "syntax": "chage --lastday 0 jane",
+                    "description": "Mark the password for jane as expired to force her to immediately change it the next time she logs in."
+                },
+                {
+                    "syntax": "nproc",
+                    "description": "Limit the number of processes a user can run"
+                },
+                {
+                    "syntax": "echo $MYVAR",
+                    "description": "Print the value of an environment variable"
+                },
+                {
+                    "syntax": "env",
+                    "description": "Print our current user environmen"
+                },
+                {
+                    "syntax": "source ~/.bashrc",
+                    "description": "To refresh the current shell environment by re-reading"
+                }
+            ]
+        },
+        {
+            "title": "Networking",
+            "commands": [
+                {
+                    "syntax": "ss -tunlp",
+                    "description": "Show processes on our system are listening for incoming network connections, on the TCP and UDP protocols"
+                },
+                {
+                    "syntax": "ip a",
+                    "description": "Displays information about interfaces, devices, routing, and tunnels"
+                },
+                {
+                    "syntax": "ip route show",
+                    "description": "Display the IPv4 routing table of a router"
+                },
+                {
+                    "syntax": "ip a add 192.168.9.3/24 dev eth1",
+                    "description": "Add a temporary extra IP to the eth1 interface"
+                },
+                {
+                    "syntax": "netplan apply",
+                    "description": "Applies the current netplan configuration to a running system"
+                },
+                {
+                    "syntax": "netplan get",
+                    "description": "Get current netplan config"
+                },
+                {
+                    "syntax": "sudo netplan try",
+                    "description": "Try netplan with auto rollback"
+                },
+                {
+                    "syntax": "netstat -tulpn",
+                    "description": "Get the list of all incoming open ports on this system"
+                },
+                {
+                    "syntax": "timedatectl",
+                    "description": "Check for the Time zone"
+                },
+                {
+                    "syntax": "timedatectl set-timezone America/New_York",
+                    "description": "Set the time zone to America, New York"
+                },
+                {
+                    "syntax": "ufw enable",
+                    "description": "Turn on UFW"
+                },
+                {
+                    "syntax": "ufw allow 22",
+                    "description": "Allow SSH on port 22"
+                },
+                {
+                    "syntax": "ufw deny 443/tcp",
+                    "description": "Deny incoming traffic to this machine on port 443, through the TCP protocol"
+                },
+                {
+                    "syntax": "ufw delete deny 443/tcp",
+                    "description": "Delete a firewall rule denying incoming traffic to this machine on port 443, through the TCP protocol"
+                },
+                {
+                    "syntax": "ufw status numbered",
+                    "description": "List numbered firewall rules"
+                },
+                {
+                    "syntax": "ufw allow from 207.45.232.181",
+                    "description": "Allow all traffic that is coming from the following IP address 207.45.232.181"
+                },
+                {
+                    "syntax": "ufw allow from 10.11.12.0/24",
+                    "description": "Allow all traffic that is coming from any IP in this network range: 10.11.12.0 to 10.11.12.255 (i.e 10.11.12.0/24)"
+                },
+                {
+                    "syntax": "ufw delete 8",
+                    "description": "Delete a numberd firewall rule"
+                }
+            ]
+        },
+        {
+            "title": "Storage",
+            "commands": [
+                {
+                    "syntax": "lsblk",
+                    "description": "Display block devices, such as disks or partitions"
+                },
+                {
+                    "syntax": "mkswap /dev/vdb3",
+                    "description": "Format a partition as swap space. Where /dev/vdb3 is the partition we want to format"
+                },
+                {
+                    "syntax": "swapon --show",
+                    "description": "Identify the swapfile"
+                },
+                {
+                    "syntax": "fdisk /dev/vdb",
+                    "description": "Update primary partitions on /dev/vdb"
+                },
+                {
+                    "syntax": "mkswap /dev/vdb2",
+                    "description": "Format the /dev/vdb2 partition as swap"
+                },
+                {
+                    "syntax": "swapon /dev/vdb2",
+                    "description": "Active swap for /dev/vdb2 partition"
+                },
+                {
+                    "syntax": "swapoff /dev/vdb2",
+                    "description": "Stop the /dev/vdb2 partition as swap"
+                },
+                {
+                    "syntax": "cfdisk",
+                    "description": "To create, delete, and modify partitions on a diskdevice"
+                },
+                {
+                    "syntax": "mkfs.xfs -L \"DataDisk\" /dev/vdb",
+                    "description": "To create an xfs filesystem with the label \"DataDisk\" on /dev/vdb"
+                },
+                {
+                    "syntax": "mkfs.ext4 -N 2048 /dev/vdc",
+                    "description": "To create an ext4 filesystem with a number of 2048"
+                },
+                {
+                    "syntax": "df -i",
+                    "description": "Show Inode Usage on Filesystem"
+                },
+                {
+                    "syntax": "mount /dev/vdb /mnt",
+                    "description": "Mount /dev/vdb in the /mnt/ directory"
+                },
+                {
+                    "syntax": "umount /mnt",
+                    "description": "Unmount the filesystem mounted in the /mnt/ directory"
+                },
+                {
+                    "syntax": "xfs_admin -L \"SwapFS\" /dev/vdb",
+                    "description": "Change the label for /dev/vdb filesystem to SwapFS"
+                },
+                {
+                    "syntax": "findmnt /dev/vda1",
+                    "description": "Show mount options used with /dev/vda1"
+                },
+                {
+                    "syntax": "exportfs -r",
+                    "description": "To reexport the /etc/exports configuration"
+                },
+                {
+                    "syntax": "pvcreate /dev/vdb /dev/vdc",
+                    "description": "Add these two disks as PVs (Physical Volumes) to LVM: /dev/vdb, /dev/vdc"
+                },
+                {
+                    "syntax": "vgextend myvg /dev/sdb1",
+                    "description": "Add PV to existing VG"
+                },
+                {
+                    "syntax": "lvextend -L +10G /dev/myvg/mylv",
+                    "description": "Extend an existing LV"
+                },
+                {
+                    "syntax": "sudo resize2fs /dev/myvg/mylv",
+                    "description": "Resize FS to use new LV capacity # ext4"
+                },
+                {
+                    "syntax": "pvremove /dev/vdc",
+                    "description": "Remove the /dev/vdc physical volume from LVM"
+                },
+                {
+                    "syntax": "vgcreate volume1 /dev/vdb",
+                    "description": "Create a Volume Group (VG) named volume1 which created on Physical Volume: /dev/vdb"
+                },
+                {
+                    "syntax": "vgextend volume1 /dev/vdc",
+                    "description": "Increases a volume group's capacity by adding one or more free physical volumes"
+                },
+                {
+                    "syntax": "vgreduce volume1 /dev/vdc",
+                    "description": "Remove /dev/vdc from the volume group volume1"
+                },
+                {
+                    "syntax": "vgs",
+                    "description": "Displays all of the volume groups"
+                },
+                {
+                    "syntax": "lvcreate",
+                    "description": "Create a Logical Volume (LV)"
+                },
+                {
+                    "syntax": "lvresize --size 752M",
+                    "description": "volume1/smalldata"
+                },
+                {
+                    "syntax": "sudo lvresize  --extents 100%VG vg/lv",
+                    "description": "Extend LV to VG max size"
+                },
+                {
+                    "syntax": "mkfs.xfs /dev/volume1/smalldata",
+                    "description": "Create an XFS filesystem on the logical volume"
+                },
+                {
+                    "syntax": "lvremove volume1/smalldata",
+                    "description": "Remove the Logical Volume called smalldata"
+                },
+                {
+                    "syntax": "getfacl archive",
+                    "description": "List the ACL permissions associated with archive file"
+                },
+                {
+                    "syntax": "setfacl --modify user:john:rw",
+                    "description": "specialfile"
+                },
+                {
+                    "syntax": "setfacl --remove user:john specialfile",
+                    "description": "Remove the ACL permissions for the user called"
+                },
+                {
+                    "syntax": "setfacl --modify group:mail:rx specialfile",
+                    "description": "Add an ACL permission for the group called mail. The mail group should get permissions to read and execute specialfile file."
+                },
+                {
+                    "syntax": "setfacl --recursive --modify",
+                    "description": "user:john:rwx collection/"
+                },
+                {
+                    "syntax": "xfs_quota -x -c 'limit bsoft=100m bhard=500m john' /dev/vda1",
+                    "description": "Edit disk quotas for the user called john. Set a soft limit of 100 megabytes and hard limit of 500 megabytes on /dev/vda1 partition"
+                }
+            ]
+        }
+    ]
+}
