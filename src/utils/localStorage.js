@@ -38,7 +38,7 @@ export const loadFlashcardData = () => {
 /**
  * Save user progress for a specific section
  * @param {string} sectionTitle - The section title
- * @param {Object} progress - Progress data (e.g., completed cards, current index)
+ * @param {Object} progress - Progress data (e.g., completed cards, current index, wrong cards)
  */
 export const saveProgress = (sectionTitle, progress) => {
   try {
@@ -92,6 +92,20 @@ export const clearAllData = () => {
     });
   } catch (error) {
     console.error('Error clearing localStorage:', error);
+  }
+};
+
+/**
+ * Clear progress for a specific section
+ * @param {string} sectionTitle - The section title
+ */
+export const clearSectionProgress = (sectionTitle) => {
+  try {
+    const allProgress = loadAllProgress();
+    delete allProgress[sectionTitle];
+    localStorage.setItem(STORAGE_KEYS.USER_PROGRESS, JSON.stringify(allProgress));
+  } catch (error) {
+    console.error('Error clearing section progress from localStorage:', error);
   }
 };
 

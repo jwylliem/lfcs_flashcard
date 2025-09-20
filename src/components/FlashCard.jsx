@@ -9,7 +9,11 @@ const FlashCard = ({ sectionTitle, onBack }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [completedCards, setCompletedCards] = useState(new Set());
+  const [wrongCards, setWrongCards] = useState(new Set());
   const [showCompleted, setShowCompleted] = useState(false);
+  const [reviewMode, setReviewMode] = useState('all'); // 'all', 'wrong'
+  const [filteredCommands, setFilteredCommands] = useState([]);
+  const [originalIndexMap, setOriginalIndexMap] = useState([]);
 
   useEffect(() => {
     const loadCommands = async () => {
@@ -23,6 +27,7 @@ const FlashCard = ({ sectionTitle, onBack }) => {
         if (progress) {
           setCurrentIndex(progress.currentIndex || 0);
           setCompletedCards(new Set(progress.completedCardIndices || []));
+          setWrongCards(new Set(progress.wrongCardIndices || []));
         }
       } catch (err) {
         setError('Failed to load commands. Please try again.');
@@ -35,29 +40,90 @@ const FlashCard = ({ sectionTitle, onBack }) => {
     loadCommands();
   }, [sectionTitle]);
 
+  // Filter commands based on review mode
+  useEffect(() => {
+    if (commands.length > 0) {
+      if (reviewMode === 'wrong') {
+        const wrongCommandsData = commands.filter((_, index) => wrongCards.has(index));
+        const wrongIndices = Array.from(wrongCards).sort((a, b) => a - b);
+        setFilteredCommands(wrongCommandsData);
+        setOriginalIndexMap(wrongIndices);
+        setCurrentIndex(0);
+      } else {
+        setFilteredCommands(commands);
+        setOriginalIndexMap(commands.map((_, index) => index));
+      }
+    }
+  }, [commands, reviewMode, wrongCards]);
+
   // Save progress whenever it changes
   useEffect(() => {
     if (commands.length > 0) {
       const progress = {
-        currentIndex,
+        currentIndex: reviewMode === 'all' ? currentIndex : 0,
         completedCardIndices: Array.from(completedCards),
+        wrongCardIndices: Array.from(wrongCards),
         completedCards: completedCards.size,
-        totalCards: commands.length
+        wrongCards: wrongCards.size,
+        totalCards: commands.length,
+        score: calculateScore()
       };
       saveProgress(sectionTitle, progress);
     }
-  }, [currentIndex, completedCards, commands.length, sectionTitle]);
+  }, [currentIndex, completedCards, wrongCards, commands.length, sectionTitle, reviewMode]);
+
+  const calculateScore = () => {
+    if (commands.length === 0) return 0;
+    const correctCards = completedCards.size - wrongCards.size;
+    return Math.max(0, Math.round((correctCards / commands.length) * 100));
+  };
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
     if (!isFlipped) {
+      const actualIndex = reviewMode === 'wrong' ? originalIndexMap[currentIndex] : currentIndex;
       // Mark as completed when flipped to see the answer
-      setCompletedCards(prev => new Set([...prev, currentIndex]));
+      setCompletedCards(prev => new Set([...prev, actualIndex]));
     }
   };
 
+  const handleMarkWrong = () => {
+    const actualIndex = reviewMode === 'wrong' ? originalIndexMap[currentIndex] : currentIndex;
+    setWrongCards(prev => new Set([...prev, actualIndex]));
+    // Also mark as completed since they've seen it
+    setCompletedCards(prev => new Set([...prev, actualIndex]));
+    
+    // Auto advance to next card
+    setTimeout(() => {
+      if (currentIndex < filteredCommands.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+        setIsFlipped(reviewMode === 'wrong' ? false : isFlipped); // Show question in wrong review mode
+      }
+    }, 300);
+  };
+
+  const handleMarkCorrect = () => {
+    const actualIndex = reviewMode === 'wrong' ? originalIndexMap[currentIndex] : currentIndex;
+    // Remove from wrong cards if it was marked wrong before
+    setWrongCards(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(actualIndex);
+      return newSet;
+    });
+    // Mark as completed
+    setCompletedCards(prev => new Set([...prev, actualIndex]));
+    
+    // Auto advance to next card
+    setTimeout(() => {
+      if (currentIndex < filteredCommands.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+        setIsFlipped(reviewMode === 'wrong' ? false : isFlipped); // Show question in wrong review mode
+      }
+    }, 300);
+  };
+
   const handleNext = () => {
-    if (currentIndex < commands.length - 1) {
+    if (currentIndex < filteredCommands.length - 1) {
       setCurrentIndex(currentIndex + 1);
       setIsFlipped(false);
     }
@@ -74,6 +140,19 @@ const FlashCard = ({ sectionTitle, onBack }) => {
     setCurrentIndex(0);
     setIsFlipped(false);
     setCompletedCards(new Set());
+    setWrongCards(new Set());
+    setReviewMode('all');
+  };
+
+  const toggleReviewMode = () => {
+    if (reviewMode === 'all') {
+      if (wrongCards.size > 0) {
+        setReviewMode('wrong');
+      }
+    } else {
+      setReviewMode('all');
+    }
+    setIsFlipped(false);
   };
 
   const toggleShowCompleted = () => {
@@ -109,8 +188,30 @@ const FlashCard = ({ sectionTitle, onBack }) => {
     );
   }
 
-  const currentCommand = commands[currentIndex];
+  if (reviewMode === 'wrong' && wrongCards.size === 0) {
+    return (
+      <div className="flashcard-container empty">
+        <h2>🎉 No wrong cards!</h2>
+        <p>You haven't marked any cards as wrong yet. Great job!</p>
+        <button onClick={() => setReviewMode('all')}>Back to All Cards</button>
+        <button onClick={onBack}>Back to Sections</button>
+      </div>
+    );
+  }
+
+  const currentCommand = filteredCommands[currentIndex];
+  const actualIndex = reviewMode === 'wrong' ? originalIndexMap[currentIndex] : currentIndex;
   const progress = Math.round((completedCards.size / commands.length) * 100);
+  const score = calculateScore();
+
+  if (!currentCommand) {
+    return (
+      <div className="flashcard-container loading">
+        <div className="loading-spinner"></div>
+        <p>Loading flashcard...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flashcard-container">
@@ -118,9 +219,13 @@ const FlashCard = ({ sectionTitle, onBack }) => {
         <button className="back-button" onClick={onBack}>
           ← Back to Sections
         </button>
-        <h2>{sectionTitle}</h2>
+        <h2>{sectionTitle} {reviewMode === 'wrong' ? '(Wrong Cards)' : ''}</h2>
         <div className="progress-info">
           <span>Progress: {completedCards.size}/{commands.length} ({progress}%)</span>
+          <span className="score-info">Score: {score}%</span>
+          {wrongCards.size > 0 && (
+            <span className="wrong-info">Wrong: {wrongCards.size}</span>
+          )}
         </div>
       </div>
 
@@ -135,13 +240,17 @@ const FlashCard = ({ sectionTitle, onBack }) => {
 
       <div className="flashcard-main">
         <div 
-          className={`flashcard ${isFlipped ? 'flipped' : ''} ${completedCards.has(currentIndex) ? 'completed' : ''}`}
+          className={`flashcard ${isFlipped ? 'flipped' : ''} ${completedCards.has(actualIndex) ? 'completed' : ''} ${wrongCards.has(actualIndex) ? 'wrong' : ''}`}
           onClick={handleCardClick}
         >
           <div className="flashcard-front">
             <div className="card-header">
-              <span className="card-number">{currentIndex + 1} / {commands.length}</span>
-              {completedCards.has(currentIndex) && <span className="completed-badge">✓</span>}
+              <span className="card-number">
+                {reviewMode === 'wrong' ? `${currentIndex + 1} / ${filteredCommands.length}` : `${actualIndex + 1} / ${commands.length}`}
+                {reviewMode === 'wrong' && ` (Original #${actualIndex + 1})`}
+              </span>
+              {completedCards.has(actualIndex) && !wrongCards.has(actualIndex) && <span className="completed-badge">✓</span>}
+              {wrongCards.has(actualIndex) && <span className="wrong-badge">✗</span>}
             </div>
             <div className="card-content">
               <h3>What command does this?</h3>
@@ -154,8 +263,12 @@ const FlashCard = ({ sectionTitle, onBack }) => {
           
           <div className="flashcard-back">
             <div className="card-header">
-              <span className="card-number">{currentIndex + 1} / {commands.length}</span>
-              <span className="completed-badge">✓</span>
+              <span className="card-number">
+                {reviewMode === 'wrong' ? `${currentIndex + 1} / ${filteredCommands.length}` : `${actualIndex + 1} / ${commands.length}`}
+                {reviewMode === 'wrong' && ` (Original #${actualIndex + 1})`}
+              </span>
+              {completedCards.has(actualIndex) && !wrongCards.has(actualIndex) && <span className="completed-badge">✓</span>}
+              {wrongCards.has(actualIndex) && <span className="wrong-badge">✗</span>}
             </div>
             <div className="card-content">
               <h3>Command:</h3>
@@ -165,7 +278,23 @@ const FlashCard = ({ sectionTitle, onBack }) => {
               </div>
             </div>
             <div className="card-footer">
-              <span className="hint">Click to flip back</span>
+              <div className="answer-buttons">
+                <button 
+                  className="answer-button correct" 
+                  onClick={(e) => { e.stopPropagation(); handleMarkCorrect(); }}
+                  title="Mark as correct"
+                >
+                  ✓ Correct
+                </button>
+                <button 
+                  className="answer-button wrong" 
+                  onClick={(e) => { e.stopPropagation(); handleMarkWrong(); }}
+                  title="Mark as wrong"
+                >
+                  ✗ Wrong
+                </button>
+              </div>
+              <span className="hint">Click card to flip back</span>
             </div>
           </div>
         </div>
@@ -182,7 +311,14 @@ const FlashCard = ({ sectionTitle, onBack }) => {
         
         <div className="center-controls">
           <button className="control-button secondary" onClick={handleReset}>
-            🔄 Reset Progress
+            🔄 Reset All
+          </button>
+          <button 
+            className={`control-button secondary ${reviewMode === 'wrong' ? 'active' : ''}`} 
+            onClick={toggleReviewMode}
+            disabled={wrongCards.size === 0}
+          >
+            {reviewMode === 'wrong' ? '📚 All Cards' : `❌ Wrong Cards (${wrongCards.size})`}
           </button>
           <button className="control-button secondary" onClick={toggleShowCompleted}>
             {showCompleted ? '👁️ Hide' : '👁️ Show'} Completed
@@ -192,7 +328,7 @@ const FlashCard = ({ sectionTitle, onBack }) => {
         <button 
           className="control-button" 
           onClick={handleNext} 
-          disabled={currentIndex === commands.length - 1}
+          disabled={currentIndex === filteredCommands.length - 1}
         >
           Next →
         </button>
