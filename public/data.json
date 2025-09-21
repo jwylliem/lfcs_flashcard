@@ -589,10 +589,10 @@
                     "description": "Display detailed file information including inode number, link count, permissions, timestamps, and file size"
                 },
                 {
-                    "syntax": "df -i",
-                    "description": "Display inode usage information for all mounted filesystems, showing used and available inodes"
-                }
-            ]
-        }
-    ]
+                     "syntax": "df -i",
+                     "description": "Display inode usage information for all mounted filesystems, showing used and available inodes"
+                 }
+             ]
+         }
+     ]
 }
