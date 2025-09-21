@@ -298,15 +298,18 @@ body {
 
 .flashcard.completed {
   border: 3px solid #4CAF50;
+  border-radius: 16px;
 }
 
 .flashcard.wrong {
   border: 3px solid #f56565;
+  border-radius: 16px;
   box-shadow: 0 8px 25px rgba(245, 101, 101, 0.15);
 }
 
 .flashcard.completed.wrong {
   border: 3px solid #ed8936;
+  border-radius: 16px;
   box-shadow: 0 8px 25px rgba(237, 137, 54, 0.15);
 }
 

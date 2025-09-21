@@ -93,11 +93,11 @@ const FlashCard = ({ sectionTitle, onBack }) => {
     // Also mark as completed since they've seen it
     setCompletedCards(prev => new Set([...prev, actualIndex]));
     
-    // Auto advance to next card
+    // Auto advance to next card - flip back first, then advance
+    setIsFlipped(false); // Flip back to question immediately
     setTimeout(() => {
       if (currentIndex < filteredCommands.length - 1) {
         setCurrentIndex(currentIndex + 1);
-        setIsFlipped(reviewMode === 'wrong' ? false : isFlipped); // Show question in wrong review mode
       }
     }, 300);
   };
@@ -113,11 +113,11 @@ const FlashCard = ({ sectionTitle, onBack }) => {
     // Mark as completed
     setCompletedCards(prev => new Set([...prev, actualIndex]));
     
-    // Auto advance to next card
+    // Auto advance to next card - flip back first, then advance
+    setIsFlipped(false); // Flip back to question immediately
     setTimeout(() => {
       if (currentIndex < filteredCommands.length - 1) {
         setCurrentIndex(currentIndex + 1);
-        setIsFlipped(reviewMode === 'wrong' ? false : isFlipped); // Show question in wrong review mode
       }
     }, 300);
   };

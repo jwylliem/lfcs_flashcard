@@ -60,7 +60,7 @@
                     "description": "Make sure the user jane gets a warning at least 2 days before the password expires"
                 },
                 {
-                    "syntax": "gpasswd -a trinity wheel",
+                    "syntax": "gpasswd -a trinity wheel / usermod -a -G wheel trinity",
                     "description": "Allow the user called trinity to execute any sudo command"
                 },
                 {
