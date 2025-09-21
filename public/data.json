@@ -273,6 +273,18 @@
                     "description": "Turn on kernel.modules_disabled kernel runtime parameter"
                 },
                 {
+                    "syntax": "sysctl kernel.modules_disabled",
+                    "description": "Read value of kernel.modules_disabled"
+                },
+                {
+                    "syntax": "vi /etc/sysctl.conf or cd /etc/sysctl.d/",
+                    "description": "Make permanent changes to sysctl"
+                },
+                {
+                    "syntax": "sudo sysctl --system",
+                    "description": "Reload sysctl configuration (after modifying /etc/sysctl.conf or /etc/sysctl.d/)"
+                },
+                {
                     "syntax": "ls -Z /bin/sudo",
                     "description": "Check out the SELinux label for the file stored at /bin/sudo"
                 },
@@ -340,6 +352,10 @@
                 {
                     "syntax": "source ~/.bashrc",
                     "description": "To refresh the current shell environment by re-reading"
+                },
+                {
+                    "syntax": "echo \"mary:1234\" | sudo chpasswd",
+                    "description": "Change the password for user mary to 1234 using chpasswd command with piped input"
                 }
             ]
         },
