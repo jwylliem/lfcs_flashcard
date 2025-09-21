@@ -170,7 +170,11 @@
                 },
                 {
                     "syntax": "lsof -p 1",
-                    "description": "List all files that are opened by process with PID 1"
+                    "description": "List all files that are opened by process with PID 1 (must use sudo)"
+                },
+                {
+                    "syntax": "lsof -i 80",
+                    "description": "FInd process listening on port 80 (must use sudo)"
                 },
                 {
                     "syntax": "pgrep -a rpcbind",
@@ -263,6 +267,18 @@
                 {
                     "syntax": "lscpu",
                     "description": "Show CPU architecture information from sysfs"
+                },
+                {
+                    "syntax": "sudo dstat --top-io --top-bio",
+                    "description": "Display real-time system statistics showing top processes by I/O usage and block I/O activity"
+                },
+                {
+                    "syntax": "iostat -x 1 / iostat -d",
+                    "description": "Display extended I/O statistics for devices and partitions with 1-second intervals"
+                },
+                {
+                    "syntax": "pidstat -d 1",
+                    "description": "Display I/O statistics for individual processes with 1-second intervals"
                 },
                 {
                     "syntax": "xfs_repair /dev/vdb",
@@ -433,6 +449,10 @@
                 {
                     "syntax": "ufw delete 8",
                     "description": "Delete a numberd firewall rule"
+                },
+                {
+                    "syntax": "/etc/resolv.conf",
+                    "description": "Configuration file that contains DNS server settings and domain search order"
                 }
             ]
         },
@@ -442,6 +462,10 @@
                 {
                     "syntax": "lsblk",
                     "description": "Display block devices, such as disks or partitions"
+                },
+                {
+                    "syntax": "sudo fallocate -l 1G /swfile",
+                    "description": "Prepare /swfile for swap based file of 1GB in size"
                 },
                 {
                     "syntax": "mkswap /dev/vdb3",
@@ -454,6 +478,10 @@
                 {
                     "syntax": "fdisk /dev/vdb",
                     "description": "Update primary partitions on /dev/vdb"
+                },
+                {
+                    "syntax": "cfdisk /dev/vdb",
+                    "description": "Interactive curses-based disk partitioning tool, more user-friendly alternative to fdisk"
                 },
                 {
                     "syntax": "mkswap /dev/vdb2",
@@ -488,6 +516,10 @@
                     "description": "Mount /dev/vdb in the /mnt/ directory"
                 },
                 {
+                    "syntax": "mount -a",
+                    "description": "Mount all filesystems listed in /etc/fstab that are not already mounted"
+                },
+                {
                     "syntax": "umount /mnt",
                     "description": "Unmount the filesystem mounted in the /mnt/ directory"
                 },
@@ -498,6 +530,10 @@
                 {
                     "syntax": "findmnt /dev/vda1",
                     "description": "Show mount options used with /dev/vda1"
+                },
+                {
+                    "syntax": "/home 10.0.0.0/24(ro)",
+                    "description": "Export /home directory to 10.0.0.0/24 in readonly mode (config in /etc/exports)"
                 },
                 {
                     "syntax": "exportfs -r",
@@ -516,8 +552,20 @@
                     "description": "Extend an existing LV"
                 },
                 {
+                    "syntax": "lvextend -l 100%VG /dev/myvg/mylv",
+                    "description": "Extend logical volume to use 100% of the volume group size"
+                },
+                {
                     "syntax": "sudo resize2fs /dev/myvg/mylv",
                     "description": "Resize FS to use new LV capacity # ext4"
+                },
+                {
+                    "syntax": "sudo resize2fs /dev/myvg/mylv",
+                    "description": "Resize ext4 filesystem to use new LV capacity"
+                },
+                {
+                    "syntax": "xfs_growfs /mount/point",
+                    "description": "Resize XFS filesystem to use new LV capacity"
                 },
                 {
                     "syntax": "pvremove /dev/vdc",
@@ -540,12 +588,12 @@
                     "description": "Displays all of the volume groups"
                 },
                 {
-                    "syntax": "lvcreate",
-                    "description": "Create a Logical Volume (LV)"
+                    "syntax": "lvcreate -n website_files -L 3G volume1",
+                    "description": "Create a Logical Volume (LV) name website_files with size 3G in the volume group volume1"
                 },
                 {
-                    "syntax": "lvresize --size 752M",
-                    "description": "volume1/smalldata"
+                    "syntax": "lvresize --size 752M volume1/smalldata",
+                    "description": "Resize the logical volume smalldata in volume group volume1 to exactly 752MB"
                 },
                 {
                     "syntax": "sudo lvresize  --extents 100%VG vg/lv",
@@ -582,6 +630,18 @@
                 {
                     "syntax": "xfs_quota -x -c 'limit bsoft=100m bhard=500m john' /dev/vda1",
                     "description": "Edit disk quotas for the user called john. Set a soft limit of 100 megabytes and hard limit of 500 megabytes on /dev/vda1 partition"
+                },
+                {
+                    "syntax": "/dev/vdb1 /backups xfs defaults 0 0",
+                    "description": "Fstab entry to automatically mount /dev/vdb1 partition to /backups directory with XFS filesystem using default options"
+                },
+                {
+                    "syntax": "/swfile none swap sw 0 0",
+                    "description": "Fstab entry to automatically mount /swfile as swap"
+                },
+                {
+                    "syntax": "sudo mount -o remount,ro /dev/vdb2 /mnt",
+                    "description": "Remount /dev/vdb2 filesystem as read-only at /mnt mount point"
                 }
             ]
         },
@@ -599,6 +659,10 @@
                 {
                     "syntax": "find /opt/findme/ -type f -size +1k -exec cp {} /opt \\;",
                     "description": "Find all files larger than 1KB and copy them to /opt directory using exec"
+                },
+                {
+                    "syntax": "find /data -type f -exec du -h {} + | sort -nr | head -n 1",
+                    "description": "Find largest file in /data"
                 },
                 {
                     "syntax": "stat filename",
