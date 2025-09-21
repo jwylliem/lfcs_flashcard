@@ -568,6 +568,31 @@
                     "description": "Edit disk quotas for the user called john. Set a soft limit of 100 megabytes and hard limit of 500 megabytes on /dev/vda1 partition"
                 }
             ]
+        },
+        {
+            "title": "Files & Directories",
+            "commands": [
+                {
+                    "syntax": "find /opt/findme/ -perm /u=x -type f",
+                    "description": "Find all files in /opt/findme/ directory that have execute permission for the user (owner)"
+                },
+                {
+                    "syntax": "find /opt/findme/ -type f -perm /u=s -exec rm {} \\;",
+                    "description": "Find all files with setuid bit set for the user and remove them using exec"
+                },
+                {
+                    "syntax": "find /opt/findme/ -type f -size +1k -exec cp {} /opt \\;",
+                    "description": "Find all files larger than 1KB and copy them to /opt directory using exec"
+                },
+                {
+                    "syntax": "stat filename",
+                    "description": "Display detailed file information including inode number, link count, permissions, timestamps, and file size"
+                },
+                {
+                    "syntax": "df -i",
+                    "description": "Display inode usage information for all mounted filesystems, showing used and available inodes"
+                }
+            ]
         }
     ]
 }
